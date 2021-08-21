@@ -13,7 +13,7 @@
               type="text"
               name="title"
               placeholder="ここにTODOのタイトルを記入してください"
-            >
+            />
           </div>
           <div class="register__input">
             <p class="register__input__title">やることの内容</p>
@@ -32,14 +32,16 @@
 
         <div class="todos">
           <ul class="todos__list">
-            <li>
+            <li v-for="todo in todos" :key="todo.id">
               <div class="todos__inner">
                 <div class="todos__completed">
-                  <button class="todos__completed__btn" type="button">未完了</button>
+                  <button class="todos__completed__btn" type="button">
+                    未完了
+                  </button>
                 </div>
                 <div class="todos__desc">
-                  <h2 class="todos__desc__title">ここにはTodoのタイトルが入ります</h2>
-                  <p class="todos__desc__detail">ここにはTodoの内容が入ります</p>
+                  <h2 class="todos__desc__title">{{ todo.title }}</h2>
+                  <p class="todos__desc__detail">{{ todo.detail }}</p>
                 </div>
                 <div class="todos__btn">
                   <button class="todos__btn__edit" type="button">編集</button>
@@ -65,12 +67,18 @@ export default {
   data() {
     return {
       todos: [
-        // {
-        //   id: 1,
-        //   title: 'タイトル 01',
-        //   detail: '詳細 01',
-        //   completed: false,
-        // },
+        {
+          id: 1,
+          title: 'タイトル 01',
+          detail: '詳細 01',
+          completed: false,
+        },
+        {
+          id: 2,
+          title: 'タイトル 02',
+          detail: '詳細 02',
+          completed: false,
+        },
       ],
     };
   },
@@ -129,7 +137,8 @@ export default {
       font-weight: bold;
       font-size: 14px;
     }
-    input, textarea {
+    input,
+    textarea {
       padding: 10px;
       width: 100%;
       font-size: 14px;
@@ -172,7 +181,7 @@ export default {
     & > li {
       padding: 15px 10px;
       border-top: 1px solid #ddd;
-      transition: all .3s;
+      transition: all 0.3s;
       &:first-child {
         border-top: none;
       }
@@ -208,7 +217,7 @@ export default {
       border-radius: 7px;
       border: 2px solid #ff1919;
       background-color: #fff;
-      transition: all .3s;
+      transition: all 0.3s;
     }
   }
   &__desc {
@@ -219,14 +228,14 @@ export default {
       font-weight: bold;
       font-size: 16px;
       line-height: 1.2;
-      transition: all .3s;
+      transition: all 0.3s;
       input {
         padding: 5px 10px;
         width: 100%;
         color: #000;
         font-size: 16px;
         border: 1px solid #ddd;
-        transition: all .3s;
+        transition: all 0.3s;
       }
     }
     &__detail {
@@ -234,14 +243,14 @@ export default {
       color: #777;
       font-size: 14px;
       line-height: 1.2;
-      transition: all .3s;
+      transition: all 0.3s;
       textarea {
         padding: 5px 10px;
         width: 100%;
         color: #000;
         font-size: 14px;
         border: 1px solid #ddd;
-        transition: all .3s;
+        transition: all 0.3s;
       }
     }
   }
@@ -257,7 +266,7 @@ export default {
       font-size: 12px;
     }
     &__edit {
-      background-color: #07C4D7;
+      background-color: #07c4d7;
     }
     &__delete {
       margin-top: 5px;

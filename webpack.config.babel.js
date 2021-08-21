@@ -8,6 +8,7 @@ console.log('nodeEnv ==> ', nodeEnv);
 console.log('isDev ==> ', isDev);
 console.log(path.resolve(__dirname, 'src/js/components'));
 
+// nodeのresolveモジュール
 const src = path.resolve(__dirname, './src');
 const dist = path.resolve(__dirname, './public');
 
