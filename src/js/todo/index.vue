@@ -168,6 +168,13 @@ export default {
             return todoItem;
           });
           this.errorMessage = '';
+        })
+        .catch((err) => {
+          if (err.response) {
+            this.errorMessage = err.response.data.message;
+          } else {
+            this.errorMessage = 'ネットに接続がされていない、もしくはサーバーとの接続がされていません。ご確認ください。';
+          }
         });
     },
   },
