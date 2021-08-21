@@ -14,6 +14,7 @@
               type="text"
               name="title"
               placeholder="ここにTODOのタイトルを記入してください"
+              required
             />
           </div>
           <div class="register__input">
@@ -23,6 +24,7 @@
               name="detail"
               rows="3"
               placeholder="ここにTODOの内容を記入してください。改行は半角スペースに変換されます。"
+              required
             />
           </div>
           <div class="register__submit">
@@ -36,7 +38,7 @@
           <p class="error__text">{{ errorMessage }}</p>
         </div>
 
-        <div v-else class="todos">
+        <div class="todos">
           <template v-if="todos.length">
             <ul class="todos__list">
               <li v-for="todo in todos" :key="todo.id">
@@ -118,8 +120,15 @@ export default {
         this.todos.unshift(data);
         // titleとdetailだけの編集
         this.targetTodo = Object.assign({}, this.targetTodo, { title: '', detail: '' });
-        console.log(this.targetTodo);
-      });
+        this.errorMessage = '';
+      })
+        .catch((err) => {
+          if (err.response) {
+            this.errorMessage = err.response.data.message;
+          } else {
+            this.errorMessage = 'ネットに接続がされていない、もしくはサーバーとの接続がされていません。ご確認ください。';
+          }
+        });
     },
   },
 };
