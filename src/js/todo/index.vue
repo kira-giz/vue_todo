@@ -167,6 +167,7 @@ export default {
             if (todoItem.id === targetTodo.id) return data;
             return todoItem;
           });
+          this.errorMessage = '';
         });
     },
   },
