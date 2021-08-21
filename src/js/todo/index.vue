@@ -6,10 +6,11 @@
       </header>
 
       <main class="main">
-        <form class="register">
+        <form class="register" @submit.prevent="addTodo">
           <div class="register__input">
             <p class="register__input__title">やることのタイトル</p>
             <input
+              v-model="targetTodo.title"
               type="text"
               name="title"
               placeholder="ここにTODOのタイトルを記入してください"
@@ -18,6 +19,7 @@
           <div class="register__input">
             <p class="register__input__title">やることの内容</p>
             <textarea
+              v-model="targetTodo.detail"
               name="detail"
               rows="3"
               placeholder="ここにTODOの内容を記入してください。改行は半角スペースに変換されます。"
@@ -84,7 +86,6 @@ export default {
       .get('http://localhost:3000/api/todos/')
       .then(({ data }) => {
         this.todos = data.todos.reverse();
-        console.log(this.todos);
       })
       .catch((error) => {
         if (error.response) {
@@ -97,8 +98,29 @@ export default {
   data() {
     return {
       todos: [],
+      targetTodo: {
+        id: null,
+        title: '',
+        detail: '',
+        completed: false,
+      },
       errorMessage: '',
     };
+  },
+  methods: {
+    addTodo() {
+      const postTodo = Object.assign({}, {
+        title: this.targetTodo.title,
+        detail: this.targetTodo.detail,
+      });
+      axios.post('http://localhost:3000/api/todos/', postTodo).then(({ data }) => {
+        // dataはparams
+        this.todos.unshift(data);
+        // titleとdetailだけの編集
+        this.targetTodo = Object.assign({}, this.targetTodo, { title: '', detail: '' });
+        console.log(this.targetTodo);
+      });
+    },
   },
 };
 </script>
