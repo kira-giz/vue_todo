@@ -30,7 +30,11 @@
           </div>
         </form>
 
-        <div class="todos">
+        <div v-if="errorMessage" class="error">
+          <p class="error__text">{{ errorMessage }}</p>
+        </div>
+
+        <div v-else class="todos">
           <template v-if="todos.length">
             <ul class="todos__list">
               <li v-for="todo in todos" :key="todo.id">
@@ -83,8 +87,11 @@ export default {
         console.log(this.todos);
       })
       .catch((error) => {
-        console.log(error);
-        // console.log(error.response);
+        if (error.response) {
+          this.errorMessage = error.response.data.message;
+        } else {
+          this.errorMessage = 'ネットに接続がされていない、もしくはサーバーとの接続がされていません。ご確認ください。';
+        }
       });
   },
   data() {
