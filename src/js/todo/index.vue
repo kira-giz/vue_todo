@@ -55,7 +55,9 @@
             </ul>
           </template>
           <template v-else>
-            <p class="todos__empty">やることリストには何も登録されていません。</p>
+            <p class="todos__empty">
+              やることリストには何も登録されていません。
+            </p>
           </template>
         </div>
       </main>
@@ -70,23 +72,25 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
+  created() {
+    axios
+      .get('http://localhost:3000/api/todos/')
+      .then(({ data }) => {
+        this.todos = data.todos.reverse();
+        console.log(this.todos);
+      })
+      .catch((error) => {
+        console.log(error);
+        // console.log(error.response);
+      });
+  },
   data() {
     return {
-      todos: [
-        // {
-        //   id: 1,
-        //   title: 'タイトル 01',
-        //   detail: '詳細 01',
-        //   completed: false,
-        // },
-        // {
-        //   id: 2,
-        //   title: 'タイトル 02',
-        //   detail: '詳細 02',
-        //   completed: false,
-        // },
-      ],
+      todos: [],
+      errorMessage: '',
     };
   },
 };
