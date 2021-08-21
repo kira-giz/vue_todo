@@ -31,25 +31,32 @@
         </form>
 
         <div class="todos">
-          <ul class="todos__list">
-            <li v-for="todo in todos" :key="todo.id">
-              <div class="todos__inner">
-                <div class="todos__completed">
-                  <button class="todos__completed__btn" type="button">
-                    未完了
-                  </button>
+          <template v-if="todos.length">
+            <ul class="todos__list">
+              <li v-for="todo in todos" :key="todo.id">
+                <div class="todos__inner">
+                  <div class="todos__completed">
+                    <button class="todos__completed__btn" type="button">
+                      未完了
+                    </button>
+                  </div>
+                  <div class="todos__desc">
+                    <h2 class="todos__desc__title">{{ todo.title }}</h2>
+                    <p class="todos__desc__detail">{{ todo.detail }}</p>
+                  </div>
+                  <div class="todos__btn">
+                    <button class="todos__btn__edit" type="button">編集</button>
+                    <button class="todos__btn__delete" type="button">
+                      削除
+                    </button>
+                  </div>
                 </div>
-                <div class="todos__desc">
-                  <h2 class="todos__desc__title">{{ todo.title }}</h2>
-                  <p class="todos__desc__detail">{{ todo.detail }}</p>
-                </div>
-                <div class="todos__btn">
-                  <button class="todos__btn__edit" type="button">編集</button>
-                  <button class="todos__btn__delete" type="button">削除</button>
-                </div>
-              </div>
-            </li>
-          </ul>
+              </li>
+            </ul>
+          </template>
+          <template v-else>
+            <p class="todos__empty">やることリストには何も登録されていません。</p>
+          </template>
         </div>
       </main>
 
@@ -67,18 +74,18 @@ export default {
   data() {
     return {
       todos: [
-        {
-          id: 1,
-          title: 'タイトル 01',
-          detail: '詳細 01',
-          completed: false,
-        },
-        {
-          id: 2,
-          title: 'タイトル 02',
-          detail: '詳細 02',
-          completed: false,
-        },
+        // {
+        //   id: 1,
+        //   title: 'タイトル 01',
+        //   detail: '詳細 01',
+        //   completed: false,
+        // },
+        // {
+        //   id: 2,
+        //   title: 'タイトル 02',
+        //   detail: '詳細 02',
+        //   completed: false,
+        // },
       ],
     };
   },
