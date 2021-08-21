@@ -41,11 +41,24 @@
         <div class="todos">
           <template v-if="todos.length">
             <ul class="todos__list">
-              <li v-for="todo in todos" :key="todo.id">
+              <li
+                v-for="todo in todos"
+                :key="todo.id"
+                :class="todo.completed ? 'is-completed' : ''"
+              >
                 <div class="todos__inner">
                   <div class="todos__completed">
-                    <button class="todos__completed__btn" type="button">
-                      未完了
+                    <button
+                      class="todos__completed__btn"
+                      type="button"
+                      @click="changeCompleted(todo)"
+                    >
+                      <template v-if="todo.completed">
+                        <span>完了</span>
+                      </template>
+                      <template v-else>
+                        <span>未完了</span>
+                      </template>
                     </button>
                   </div>
                   <div class="todos__desc">
@@ -111,23 +124,49 @@ export default {
   },
   methods: {
     addTodo() {
-      const postTodo = Object.assign({}, {
-        title: this.targetTodo.title,
-        detail: this.targetTodo.detail,
-      });
-      axios.post('http://localhost:3000/api/todos/', postTodo).then(({ data }) => {
-        // dataはparams
-        this.todos.unshift(data);
-        // titleとdetailだけの編集
-        this.targetTodo = Object.assign({}, this.targetTodo, { title: '', detail: '' });
-        this.errorMessage = '';
-      })
+      // プレーンなオブジェクト
+      const postTodo = Object.assign(
+        {},
+        {
+          title: this.targetTodo.title,
+          detail: this.targetTodo.detail,
+        },
+      );
+      console.log(postTodo); // title & detail only
+      axios
+        .post('http://localhost:3000/api/todos/', postTodo)
+        .then(({ data }) => {
+          console.log(data);
+          // dataはparams
+          this.todos.unshift(data);
+          // titleとdetailだけの編集
+          this.targetTodo = Object.assign({}, this.targetTodo, {
+            title: '',
+            detail: '',
+          });
+          this.errorMessage = '';
+        })
         .catch((err) => {
           if (err.response) {
             this.errorMessage = err.response.data.message;
           } else {
             this.errorMessage = 'ネットに接続がされていない、もしくはサーバーとの接続がされていません。ご確認ください。';
           }
+        });
+    },
+    changeCompleted(todo) {
+      // completedの値を変更しました
+      const targetTodo = Object.assign({}, todo);
+      axios
+        .patch(`http://localhost:3000/api/todos/${targetTodo.id}`, {
+          completed: !targetTodo.completed,
+        })
+        .then(({ data }) => {
+          // todosの元の値と変更した値の交換をしないといけません
+          this.todos = this.todos.map((todoItem) => {
+            if (todoItem.id === targetTodo.id) return data;
+            return todoItem;
+          });
         });
     },
   },
