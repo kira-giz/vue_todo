@@ -1,1 +1,1 @@
-{"todos":[{"title":"aaa","detail":"a","id":1,"completed":false},{"title":"漫画","detail":"漫画を読む","id":2,"completed":false},{"title":"やること","detail":"漫画を読む","id":3,"completed":false}]}
+{"todos":[{"title":"aaa","detail":"a","id":1,"completed":true},{"title":"漫画","detail":"漫画を読む","id":2,"completed":true},{"title":"やること","detail":"漫画を読む","id":3,"completed":true},{"title":"やることリスト","detail":"漫画と小説を読む","id":4,"completed":true}]}

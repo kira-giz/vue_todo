@@ -84,9 +84,9 @@
       </main>
 
       <footer class="footer">
-        <p>全項目数: 0</p>
-        <p>完了済: 0</p>
-        <p>未完了: 0</p>
+        <p>全項目数: {{ todos.length }}</p>
+        <p>完了済: {{ completeTodo }}</p>
+        <p>未完了: {{ notCompleteTodo }}</p>
       </footer>
     </div>
   </div>
@@ -176,6 +176,14 @@ export default {
             this.errorMessage = 'ネットに接続がされていない、もしくはサーバーとの接続がされていません。ご確認ください。';
           }
         });
+    },
+  },
+  computed: {
+    completeTodo() {
+      return this.todos.filter(todo => todo.completed).length;
+    },
+    notCompleteTodo() {
+      return this.todos.filter(todo => !todo.completed).length;
     },
   },
 };
