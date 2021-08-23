@@ -6,7 +6,10 @@
       </header>
 
       <main class="main">
-        <form class="register" @submit.prevent="addTodo">
+        <form
+          class="register"
+          @submit.prevent="targetTodo.id ? editTodo() : addTodo()"
+        >
           <div class="register__input">
             <p class="register__input__title">やることのタイトル</p>
             <input
@@ -29,7 +32,16 @@
           </div>
           <div class="register__submit">
             <button class="register__submit__btn" type="submit" name="button">
-              登録する
+              <template v-if="targetTodo.id">
+                <span>
+                  変更する
+                </span>
+              </template>
+              <template v-else>
+                <span>
+                  登録する
+                </span>
+              </template>
             </button>
           </div>
         </form>
@@ -66,8 +78,18 @@
                     <p class="todos__desc__detail">{{ todo.detail }}</p>
                   </div>
                   <div class="todos__btn">
-                    <button class="todos__btn__edit" type="button">編集</button>
-                    <button class="todos__btn__delete" type="button" @click="deleteTodo(todo.id)">
+                    <button
+                      class="todos__btn__edit"
+                      type="button"
+                      @click="showEditor(todo)"
+                    >
+                      編集
+                    </button>
+                    <button
+                      class="todos__btn__delete"
+                      type="button"
+                      @click="deleteTodo(todo.id)"
+                    >
                       削除
                     </button>
                   </div>
@@ -132,11 +154,11 @@ export default {
           detail: this.targetTodo.detail,
         },
       );
-      console.log(postTodo); // title & detail only
+      // console.log(postTodo); // title & detail only
       axios
         .post('http://localhost:3000/api/todos/', postTodo)
         .then(({ data }) => {
-          console.log(data);
+          // console.log(data);
           // dataはparams
           this.todos.unshift(data);
           // titleとdetailだけの編集
@@ -164,9 +186,11 @@ export default {
         .then(({ data }) => {
           // todosの元の値と変更した値の交換をしないといけません
           this.todos = this.todos.map((todoItem) => {
+            // dataの方がよくない？なんでtargetTodo?
             if (todoItem.id === targetTodo.id) return data;
             return todoItem;
           });
+          console.log(this.todos);
           this.errorMessage = '';
         })
         .catch((err) => {
@@ -178,9 +202,77 @@ export default {
         });
     },
     deleteTodo(id) {
-      axios.delete(`http://localhost:3000/api/todos/${id}`).then(({ data }) => {
-        this.todos = data.todos.reverse();
-      });
+      axios
+        .delete(`http://localhost:3000/api/todos/${id}`)
+        .then(({ data }) => {
+          this.todos = data.todos.reverse();
+          this.errorMessage = '';
+        })
+        .catch((err) => {
+          if (err.response) {
+            this.errorMessage = err.response.data.message;
+          } else {
+            this.errorMessage = 'ネットに接続がされていない、もしくはサーバーとの接続がされていません。ご確認ください。';
+          }
+        });
+    },
+    showEditor(todo) {
+      // 編集時フォームに対象のtodo表示
+      this.targetTodo = { ...todo };
+    },
+    editTodo() {
+      // const targetTodo = this.todos.find(
+      //   (todo) => todo.id === this.targetTodo.id
+      // );
+      // if (
+      //   targetTodo.title === this.targetTodo.title &&
+      //   targetTodo.detail === this.targetTodo.detail
+      // ) {
+      //   this.targetTodo = {
+      //     id: null,
+      //     title: "",
+      //     detail: "",
+      //     completed: false,
+      //   };
+      //   return;
+      // }
+      // todoの変更 & includesの方がいいのでは？
+      if (this.todos.includes(this.targetTodo)) {
+        this.targetTodo = {
+          id: null,
+          title: '',
+          detail: '',
+          completed: false,
+        };
+        return;
+      }
+
+      axios
+        .patch(`http://localhost:3000/api/todos/${this.targetTodo.id}`, {
+          title: this.targetTodo.title,
+          detail: this.targetTodo.detail,
+        })
+        .then(({ data }) => {
+          this.todos = this.todos.map((todoItem) => {
+            // dataのところはthis.targetTodoの方がいい？
+            if (todoItem.id === data.id) return data;
+            return todoItem;
+          });
+          this.targetTodo = {
+            id: null,
+            title: '',
+            detail: '',
+            completed: false,
+          };
+          console.log(this.todos);
+        })
+        .catch((err) => {
+          if (err.response) {
+            this.errorMessage = err.response.data.message;
+          } else {
+            this.errorMessage = 'ネットに接続がされていない、もしくはサーバーとの接続がされていません。ご確認ください。';
+          }
+        });
     },
   },
   computed: {
