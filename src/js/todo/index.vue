@@ -202,6 +202,13 @@ export default {
         });
     },
     deleteTodo(id) {
+      // 編集中でもform欄が空になるように初期化
+      this.targetTodo = {
+        id: null,
+        title: '',
+        detail: '',
+        completed: false,
+      };
       axios
         .delete(`http://localhost:3000/api/todos/${id}`)
         .then(({ data }) => {
