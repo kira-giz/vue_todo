@@ -169,11 +169,7 @@ export default {
           this.errorMessage = '';
         })
         .catch((err) => {
-          if (err.response) {
-            this.errorMessage = err.response.data.message;
-          } else {
-            this.errorMessage = 'ネットに接続がされていない、もしくはサーバーとの接続がされていません。ご確認ください。';
-          }
+          this.showError(err);
         });
     },
     changeCompleted(todo) {
@@ -201,11 +197,7 @@ export default {
           this.errorMessage = '';
         })
         .catch((err) => {
-          if (err.response) {
-            this.errorMessage = err.response.data.message;
-          } else {
-            this.errorMessage = 'ネットに接続がされていない、もしくはサーバーとの接続がされていません。ご確認ください。';
-          }
+          this.showError(err);
         });
     },
     deleteTodo(id) {
@@ -223,11 +215,7 @@ export default {
           this.errorMessage = '';
         })
         .catch((err) => {
-          if (err.response) {
-            this.errorMessage = err.response.data.message;
-          } else {
-            this.errorMessage = 'ネットに接続がされていない、もしくはサーバーとの接続がされていません。ご確認ください。';
-          }
+          this.showError(err);
         });
     },
     showEditor(todo) {
@@ -281,12 +269,15 @@ export default {
           console.log(this.todos);
         })
         .catch((err) => {
-          if (err.response) {
-            this.errorMessage = err.response.data.message;
-          } else {
-            this.errorMessage = 'ネットに接続がされていない、もしくはサーバーとの接続がされていません。ご確認ください。';
-          }
+          this.showError(err);
         });
+    },
+    showError(err) {
+      if (err.response) {
+        this.errorMessage = err.response.data.message;
+      } else {
+        this.errorMessage = 'ネットに接続がされていない、もしくはサーバーとの接続がされていません。ご確認ください。';
+      }
     },
   },
   computed: {
