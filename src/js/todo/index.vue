@@ -145,6 +145,14 @@ export default {
     };
   },
   methods: {
+    initTargetTodo() {
+      return {
+        id: null,
+        title: '',
+        detail: '',
+        completed: false,
+      };
+    },
     addTodo() {
       // プレーンなオブジェクト
       const postTodo = Object.assign(
@@ -162,11 +170,8 @@ export default {
           // dataはparams
           this.todos.unshift(data);
           // titleとdetailだけの編集
-          this.targetTodo = Object.assign({}, this.targetTodo, {
-            title: '',
-            detail: '',
-          });
-          this.errorMessage = '';
+          this.targetTodo = this.initTargetTodo();
+          this.hideError();
         })
         .catch((err) => {
           this.showError(err);
@@ -174,12 +179,7 @@ export default {
     },
     changeCompleted(todo) {
       // form欄を初期化
-      this.targetTodo = {
-        id: null,
-        title: '',
-        detail: '',
-        completed: false,
-      };
+      this.targetTodo = this.initTargetTodo();
       // completedの値を変更しました
       const targetTodo = Object.assign({}, todo);
       axios
@@ -194,7 +194,7 @@ export default {
             return todoItem;
           });
           console.log(this.todos);
-          this.errorMessage = '';
+          this.hideError();
         })
         .catch((err) => {
           this.showError(err);
@@ -202,17 +202,12 @@ export default {
     },
     deleteTodo(id) {
       // 編集中でもform欄が空になるように初期化
-      this.targetTodo = {
-        id: null,
-        title: '',
-        detail: '',
-        completed: false,
-      };
+      this.targetTodo = this.initTargetTodo();
       axios
         .delete(`http://localhost:3000/api/todos/${id}`)
         .then(({ data }) => {
           this.todos = data.todos.reverse();
-          this.errorMessage = '';
+          this.hideError();
         })
         .catch((err) => {
           this.showError(err);
@@ -240,12 +235,7 @@ export default {
       // }
       // todoの変更 & includesの方がいいのでは？
       if (this.todos.includes(this.targetTodo)) {
-        this.targetTodo = {
-          id: null,
-          title: '',
-          detail: '',
-          completed: false,
-        };
+        this.targetTodo = this.initTargetTodo();
         return;
       }
 
@@ -260,17 +250,15 @@ export default {
             if (todoItem.id === data.id) return data;
             return todoItem;
           });
-          this.targetTodo = {
-            id: null,
-            title: '',
-            detail: '',
-            completed: false,
-          };
+          this.targetTodo = this.initTargetTodo();
           console.log(this.todos);
         })
         .catch((err) => {
           this.showError(err);
         });
+    },
+    hideError() {
+      this.errorMessage = '';
     },
     showError(err) {
       if (err.response) {
