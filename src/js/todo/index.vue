@@ -177,6 +177,13 @@ export default {
         });
     },
     changeCompleted(todo) {
+      // form欄を初期化
+      this.targetTodo = {
+        id: null,
+        title: '',
+        detail: '',
+        completed: false,
+      };
       // completedの値を変更しました
       const targetTodo = Object.assign({}, todo);
       axios
