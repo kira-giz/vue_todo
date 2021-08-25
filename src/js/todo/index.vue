@@ -162,14 +162,10 @@ export default {
           detail: this.targetTodo.detail,
         },
       );
-      // console.log(postTodo); // title & detail only
       axios
         .post('http://localhost:3000/api/todos/', postTodo)
         .then(({ data }) => {
-          // console.log(data);
-          // dataはparams
           this.todos.unshift(data);
-          // titleとdetailだけの編集
           this.targetTodo = this.initTargetTodo();
           this.hideError();
         })
@@ -190,10 +186,9 @@ export default {
           // todosの元の値と変更した値の交換をしないといけません
           this.todos = this.todos.map((todoItem) => {
             // dataの方がよくない？なんでtargetTodo?
-            if (todoItem.id === targetTodo.id) return data;
+            if (todoItem.id === data.id) return data;
             return todoItem;
           });
-          console.log(this.todos);
           this.hideError();
         })
         .catch((err) => {
@@ -218,22 +213,6 @@ export default {
       this.targetTodo = { ...todo };
     },
     editTodo() {
-      // const targetTodo = this.todos.find(
-      //   (todo) => todo.id === this.targetTodo.id
-      // );
-      // if (
-      //   targetTodo.title === this.targetTodo.title &&
-      //   targetTodo.detail === this.targetTodo.detail
-      // ) {
-      //   this.targetTodo = {
-      //     id: null,
-      //     title: "",
-      //     detail: "",
-      //     completed: false,
-      //   };
-      //   return;
-      // }
-      // todoの変更 & includesの方がいいのでは？
       if (this.todos.includes(this.targetTodo)) {
         this.targetTodo = this.initTargetTodo();
         return;
@@ -246,12 +225,10 @@ export default {
         })
         .then(({ data }) => {
           this.todos = this.todos.map((todoItem) => {
-            // dataのところはthis.targetTodoの方がいい？
             if (todoItem.id === data.id) return data;
             return todoItem;
           });
           this.targetTodo = this.initTargetTodo();
-          console.log(this.todos);
         })
         .catch((err) => {
           this.showError(err);

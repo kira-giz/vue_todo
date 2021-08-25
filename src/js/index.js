@@ -9,6 +9,7 @@ import Vue from 'vue';
 
 import '../scss/global.scss';
 
+// webpackでエイリアス設定
 // import myApp from './first';
 import myApp from 'TodoDir';
 // import myApp from 'TodoRouterDir';
